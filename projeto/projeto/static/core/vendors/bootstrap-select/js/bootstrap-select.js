@@ -800,7 +800,13 @@
       }
 
       //strip all HTML tags and trim the result, then unescape any escaped tags
-      this.$button.attr('title', htmlUnescape($.trim(title.replace(/<[^>]*>?/g, ''))));
+      var sanitizedTitle = title;
+      var prevSanitizedTitle;
+      do {
+        prevSanitizedTitle = sanitizedTitle;
+        sanitizedTitle = sanitizedTitle.replace(/<[^>]*>?/g, '');
+      } while (sanitizedTitle !== prevSanitizedTitle);
+      this.$button.attr('title', htmlUnescape($.trim(sanitizedTitle)));
       this.$button.children('.filter-option').html(title);
 
       this.$element.trigger('rendered.bs.select');
