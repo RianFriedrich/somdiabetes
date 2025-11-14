@@ -21,6 +21,16 @@
   }
 }(this, function (jQuery) {
 
+  // Robustly strip all HTML tags by replacing until stable.
+  function stripTags(input) {
+    var prev;
+    do {
+      prev = input;
+      input = input.replace(/<[^>]*>?/g, '');
+    } while (input !== prev);
+    return input;
+  }
+
 (function ($) {
   'use strict';
 
@@ -823,7 +833,7 @@
       }
 
       //strip all HTML tags and trim the result, then unescape any escaped tags
-      this.$button.attr('title', htmlUnescape($.trim(title.replace(/<[^>]*>?/g, ''))));
+      this.$button.attr('title', htmlUnescape($.trim(stripTags(title))));
       this.$button.children('.filter-option').html(title);
 
       this.$element.trigger('rendered.bs.select');
